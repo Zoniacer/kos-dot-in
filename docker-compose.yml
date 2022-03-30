@@ -1,0 +1,19 @@
+version: "3.8"
+services:
+  proyek-laravel-fp:
+    container_name: proyek-laravel-fp
+    image: dptsi/laravel-web-dev:8.0
+    volumes:
+      - ./src:/var/www/html
+    env_file: .env
+    dns:
+      - 1.1.1.1
+      - 1.0.0.1
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - nginx-proxy-network
+
+networks:
+  nginx-proxy-network:
+    external: true
