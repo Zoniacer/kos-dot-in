@@ -3,6 +3,8 @@ services:
   proyek-laravel-fp:
     container_name: proyek-laravel-fp
     image: dptsi/laravel-web-dev:8.0
+    ports: 
+      - "8080:80"
     volumes:
       - ./src:/var/www/html
     env_file: .env
@@ -11,6 +13,37 @@ services:
       - 1.0.0.1
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    networks:
+      - nginx-proxy-network
+  
+  mysql:
+    image: mysql
+    container_name: mysql
+    restart: unless-stopped
+    tty: true
+    ports: 
+      - "3306:3306"
+    volumes:
+      - ./mysql:/var/lib/mysql/
+    environment:
+      MYSQL_DATABASE: KosDotIn
+      MYSQL_ROOT_PASSWORD: han
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    networks:
+      - nginx-proxy-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    container_name: phpmyadmin
+    depends_on: 
+      - mysql
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: mysql
+      MYSQL_ROOT_PASSWORD: han
     networks:
       - nginx-proxy-network
 
